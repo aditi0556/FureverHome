@@ -7,10 +7,13 @@ import { MoveLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+import Loader from "./Loader";
 export default function Signup() {
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState("");
-
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
+  const [loader,setLoader]=useState(false);
   const showError = (msg) => {
     setErrorMsg(msg);
     setTimeout(() => {setErrorMsg(""); navigate("/signup");}, 3000); // clears after 3 seconds
@@ -24,15 +27,20 @@ export default function Signup() {
   });
   async function addUser() {
     console.log(formdata);
+    setLoader(true);
     try {
       const res = await axios.post("/v1/users/signup", formdata,{
         withCredentials:true,
       });
       console.log(res);
+      setIsAuthenticated(true);
       navigate("/");
     } catch (err) {
       const msg = err.response.data.error || "Signup failed";
       showError(msg);
+      setIsAuthenticated(false);
+    }finally{
+        setLoader(false);
     }
   }
   const handleSubmit = (e) => {
@@ -126,13 +134,24 @@ export default function Signup() {
             onChange={handleChange}
           />
         </LabelInputContainer>
-        <button
-          className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
-          type="submit"
-        >
-          Sign up &rarr;
-          <BottomGradient />
-        </button>
+        {!loader && (
+          <button
+            className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
+            type="submit"
+          >
+            Sign up &rarr;
+            <BottomGradient />
+          </button>
+        )}
+        {loader && (
+          <button
+            className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
+            type="submit"
+          >
+            <Loader/> &rarr;
+            <BottomGradient />
+          </button>
+        )}
       </form>
     </div>
   );
