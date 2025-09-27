@@ -4,6 +4,7 @@ import session from "express-session";
 import LocalStrategy from "passport-local";
 import passport from "passport";
 import User from "./Models/User.js";
+import user from "./Routes/user.js";
 import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
@@ -35,19 +36,22 @@ const sessionOptions = {
   resave: false,
   saveUninitialized: false,
   cookie: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
+    secure:false,
   },
 };
+app.use(express.json());
 app.use(session(sessionOptions));
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-app.use(express.json());
 
+
+app.use("/v1/users", user);
 
 app.get("/", (req, res) => {
   res.send("Working");

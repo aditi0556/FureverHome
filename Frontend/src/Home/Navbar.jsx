@@ -1,7 +1,36 @@
 import { useState,useEffect } from "react";
 import { useNavigate } from "react-router";
+import axios from "axios";
+import { useAuth } from "./AuthContext";
 export default function Navbar() {
   const navigate=useNavigate();
+  const [state, setState] = useState(false);
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
+  async function handleLogOut() {
+    try {
+      const res = await axios.get("/v1/users/logout");
+      setState(false);
+      setIsAuthenticated(false);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+   useEffect(() => {
+     const checkauth = async () => {
+       try {
+         const res = await axios.get("/v1/users/checkauth", {
+           withCredentials: true,
+         });
+         console.log(res);
+         setState(() => res.data);
+       } catch (err) {
+         console.log(err);
+       }
+     };
+     checkauth();
+   }, []);
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -77,12 +106,28 @@ export default function Navbar() {
               </h1>
             </li>
             <li>
-              <h1
+              {/* <h1
                 onClick={() => navigate("/signup")}
                 className="block py-2 px-3 hover:cursor-pointer hover:scale-110 hover:font-extrabold font-bold  text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white  dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
                 Login
-              </h1>
+              </h1> */}
+              {!isAuthenticated && (
+                <h1
+                  onClick={() => navigate("/signup")}
+                  className="block py-2 px-3 hover:cursor-pointer hover:scale-110 hover:font-extrabold font-bold  text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white  dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                >
+                  Login
+                </h1>
+              )}
+              {isAuthenticated && (
+                <h1
+                  onClick={ handleLogOut }
+                  className="block py-2 px-3 hover:cursor-pointer hover:scale-110 hover:font-extrabold font-bold  text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white  dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                >
+                  Log Out
+                </h1>
+              )}
             </li>
           </ul>
         </div>
