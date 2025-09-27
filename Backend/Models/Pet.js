@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import User from "./User.js";
 const Schema = mongoose.Schema;
 
 const petSchema = new Schema({
@@ -47,6 +48,11 @@ const petSchema = new Schema({
       message: "description must be at least 3 characters",
     },
   },
+  userId:{
+    type:Schema.Types.ObjectId,ref:"User",
+    required:true,
+  },
+  images:[{url:{type:String,required:true},fileName:{type:String,required:true},publicId:{type:String}}]
 });
 
 

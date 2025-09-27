@@ -2,6 +2,17 @@ import express from "express"
 import User from "../Models/User.js";
 const route=express.Router();
 import passport from "passport";
+import ensureAuthenticated from "../Middleware/ensureAuthenticated.js";
+
+route.get("/userid",ensureAuthenticated,async(req,res)=>{
+  try{
+    const result=req.user._id;
+    console.log(result);
+    res.json({userId:result});
+  }catch(err){
+    res.status(500).json({error:"Not Found"});
+  }
+})
 
 route.get("/",(req,res)=>{
     console.log("Working");

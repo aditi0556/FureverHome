@@ -5,6 +5,7 @@ import { useAuth } from "./AuthContext";
 export default function Navbar() {
   const navigate=useNavigate();
   const [state, setState] = useState(false);
+  const [user,setUser]=useState("");
   const { isAuthenticated, setIsAuthenticated } = useAuth();
   async function handleLogOut() {
     try {
@@ -13,6 +14,17 @@ export default function Navbar() {
       setIsAuthenticated(false);
       navigate("/");
     } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function getUserId(){
+    try{
+      const res=await axios.get("/v1/users/userid");
+      console.log(res);
+      setUser(res.data.userId);
+    }
+    catch(err){
       console.log(err);
     }
   }
@@ -30,6 +42,7 @@ export default function Navbar() {
        }
      };
      checkauth();
+     getUserId();
    }, []);
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -38,11 +51,7 @@ export default function Navbar() {
           href="https://flowbite.com/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
-          <img
-            src="/public/paw.svg"
-            className="h-8"
-            alt="Flowbite Logo"
-          />
+          <img src="/public/paw.svg" className="h-8" alt="Flowbite Logo" />
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
             Furever Home
           </span>
@@ -98,12 +107,22 @@ export default function Navbar() {
               </h1>
             </li>
             <li>
-              <h1
-                onClick={() => navigate("/pricing")}
-                className="block py-2 px-3 hover:cursor-pointer hover:scale-110 hover:font-extrabold font-bold  text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white  dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                Pricing
-              </h1>
+              {isAuthenticated && (
+                <h1
+                  onClick={() => navigate(`/form/${user}`)}
+                  className="block py-2 px-3 hover:cursor-pointer hover:scale-110 hover:font-extrabold font-bold  text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white  dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                >
+                  Find A Home
+                </h1>
+              )}
+              {!isAuthenticated && (
+                <h1
+                  onClick={() => navigate("/login")}
+                  className="block py-2 px-3 hover:cursor-pointer hover:scale-110 hover:font-extrabold font-bold  text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white  dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                >
+                  Find A Home
+                </h1>
+              )}
             </li>
             <li>
               {/* <h1
@@ -122,7 +141,7 @@ export default function Navbar() {
               )}
               {isAuthenticated && (
                 <h1
-                  onClick={ handleLogOut }
+                  onClick={handleLogOut}
                   className="block py-2 px-3 hover:cursor-pointer hover:scale-110 hover:font-extrabold font-bold  text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white  dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
                   Log Out
