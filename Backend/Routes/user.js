@@ -46,22 +46,20 @@ route.get("/logout", (req, res) => {
   });
 });
 
-route.post(
-  "/login",
-  passport.authenticate("local", {
-    failureRedirect: "/login",
-  }),
-  async (req, res) => {
-    console.log(req.isAuthenticated());
-    try{
-        res.send("Welcome! You are loggedin");
+route.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return res.status(404).json({ error: "Error" });
     }
-    catch(err){
-        console.log(err);
-        res.status(404).json({error:"Invalid Credentials!!"});
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
     }
-  }
-);
+    req.login(user, (err) => {
+      if (err) return next(err);
+      return res.json({ success: true, user: user });
+    });
+  })(req, res, next);
+});
 
 
 export default route;

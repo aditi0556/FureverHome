@@ -11,28 +11,40 @@ import { useNavigate } from "react-router";
 import Loader from "./Loader";
 export default function Login() {
   const navigate = useNavigate();
-  const [err,setErr]=useState("");
-  const [loader,setLoader]=useState(false);
+  const [err, setErr] = useState("");
+  const [loader, setLoader] = useState(false);
   const { isAuthenticated, setIsAuthenticated } = useAuth();
   const [formdata, setFormdata] = useState({
     username: "",
     password: "",
   });
-  async function handleLogin() {
-    setLoader(true);
-    try {
-      const res = await axios.post("/v1/users/login", formdata, {
-        withCredentials: true,
-      });
-      console.log(res);
-      setIsAuthenticated(true);
-      navigate("/");
-    } catch (err) {
-      console.log(err);
-    }finally{
-        setLoader(false);
+  const showError = (msg) => {
+    setErr(msg);
+    setTimeout(() => {
+      setErr("");
+      navigate("/login");
+    }, 3000); 
+  };
+ async function handleLogin() {
+   setLoader(true);
+   try {
+     const res = await axios.post("/v1/users/login", formdata, {
+       withCredentials: true,
+     });
+     console.log(res);
+     if (res.data.success) {
+       setIsAuthenticated(true);
+       navigate("/");
+     } else {
+       setIsAuthenticated(false);
     }
-  }
+   } catch (err) {
+     setIsAuthenticated(false);
+     showError("error");
+    } finally {
+     setLoader(false);
+   }
+ }
   const handleSubmit = (e) => {
     e.preventDefault();
     handleLogin();
@@ -44,6 +56,11 @@ export default function Login() {
 
   return (
     <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 mt-20  md:rounded-2xl md:p-8 dark:bg-black">
+      {err && (
+        <div className="mb-4 text-sm text-red-600 dark:text-red-400 transition-opacity duration-300">
+          Invalid Credentials
+        </div>
+      )}
       <span
         className="text-blue-600 hover:cursor-pointer"
         onClick={() => navigate("/")}
@@ -104,7 +121,7 @@ export default function Login() {
             type="submit"
             disabled={loader}
           >
-            <Loader/> 
+            <Loader />
             <BottomGradient />
           </button>
         )}
