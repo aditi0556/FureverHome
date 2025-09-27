@@ -91,7 +91,7 @@ export default function Navbar() {
             </li>
             <li>
               <h1
-                // onClick={() => navigate("/adopt")}
+                onClick={() => navigate("/adopt")}
                 className="block py-2 px-3 hover:cursor-pointer hover:scale-110 hover:font-extrabold font-bold  text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white  dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
                 Adopt
@@ -99,7 +99,7 @@ export default function Navbar() {
             </li>
             <li>
               <h1
-                // onClick={() => navigate("/")}
+                onClick={() => navigate("/pricing")}
                 className="block py-2 px-3 hover:cursor-pointer hover:scale-110 hover:font-extrabold font-bold  text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 dark:text-white  dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
                 Pricing
