@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Pet from "./Pet.js"
 import passportLocalMongoose from "passport-local-mongoose";
 const Schema=mongoose.Schema;
 const userSchema=new Schema({
@@ -17,7 +18,9 @@ const userSchema=new Schema({
     username:{
         type:String,
         minlength:5,
-    }
+    },
+    posts: [{type:Schema.Types.ObjectId,ref:Pet}]
+    
 });
 userSchema.plugin(passportLocalMongoose);
 export default mongoose.model("User",userSchema);

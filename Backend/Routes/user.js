@@ -47,7 +47,7 @@ route.get("/logout", (req, res) => {
 });
 
 route.post("/login", (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
+  passport.authenticate("local", (err, user) => {
     if (err) {
       return res.status(404).json({ error: "Error" });
     }

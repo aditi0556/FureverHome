@@ -4,6 +4,7 @@ import session from "express-session";
 import LocalStrategy from "passport-local";
 import passport from "passport";
 import User from "./Models/User.js";
+import pet from "./Routes/pet.js";
 import user from "./Routes/user.js";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -52,6 +53,7 @@ passport.deserializeUser(User.deserializeUser());
 
 
 app.use("/v1/users", user);
+app.use("/v1/pets", pet);
 
 app.get("/", (req, res) => {
   res.send("Working");
