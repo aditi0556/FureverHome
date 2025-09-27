@@ -55,12 +55,14 @@ route.get("/allPets",async(req,res)=>{
 });
 
 //for adding the listing
-route.post("/find/:id",ensureAuthenticated,upload.fields([
-    { name: "images", maxCount: 4 },
-  ]),async (req,res)=>{
+route.post("/find/:id",ensureAuthenticated,upload.fields([{name:"images"}]),async (req,res)=>{
     const { id }=req.params;
+    console.log(req.body);
+    console.log(req.files);
     try{
-        if(req.files) return res.status(404).json("No files uploaded");
+        if(!req.files || !req.files.images || req.files.images.length === 0) {
+        return res.status(400).json("No files uploaded");
+}
         const fileName=[...req.files.images];
         const {
           petType,
