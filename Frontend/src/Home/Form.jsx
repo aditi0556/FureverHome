@@ -100,24 +100,30 @@ const Form = () => {
           required
           className="p-2 rounded border"
         />
-        <input
-          type="text"
+        <select
           name="vaccinated"
           placeholder="Vaccinated"
           value={formData.vaccinated}
           required
           onChange={handleChange}
-          className="p-2 rounded border"
-        />
-        <input
+          className="p-2 rounded border text-gray-500"
+        >
+            <option value="">Vaccinated?</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>    
+        <select
           type="text"
           name="gender"
-          placeholder="Gender"
           value={formData.gender}
           required
           onChange={handleChange}
-          className="p-2 rounded border"
-        />
+          className="p-2 rounded border text-gray-500"
+        >
+            <option value="">Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
         <input
           type="text"
           name="petType"
@@ -154,7 +160,7 @@ const Form = () => {
           onChange={handleChange}
           className="p-2 rounded border"
         />
-        <input
+        <textarea
           type="text"
           name="description"
           placeholder="Reason for Adoption"
