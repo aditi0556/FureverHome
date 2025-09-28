@@ -1,82 +1,13 @@
-import { useState,useEffect } from 'react'
-import { useNavigate } from 'react-router'
-import { useParams } from 'react-router';
-import Navbar from './Navbar'
-import axios from 'axios';
-import Loader from './Loader';
-const Form = () => {
-    const navigate = useNavigate()
-    const {id}=useParams();
-    const url = '../../public/wallpaper.jpg'
-    const [load,setLoad]=useState(false);
-    const [imageFiles, setImageFiles] = useState([]);
-    const [err,setErr]=useState("");
-    function errorMess(){
-        setErr("Error in Adding.Please try again!!");
-        setTimeout(()=>{
-            setErr("");
-        },3000);
-    }
-    async function addPost(data) {
-      setLoad(true);
-      const form = new FormData();
-      form.append("petType",formData.petType);
-      form.append("breed", formData.breed);
-      form.append("age", formData.age);
-      form.append("name", formData.name);
-      form.append("address", formData.address);
-      form.append("vaccinated", formData.vaccinated);
-      form.append("gender", formData.gender);
-      form.append("behaviour", formData.behaviour);
-      form.append("reason", formData.reason);
-      form.append("phone", formData.phone);
-      console.log(form);
-      imageFiles.forEach((file) => form.append("images", file));
-
-      try {
-        const res = await axios.post(`/v1/pets/find/${id}`, form, {
-          headers: { "Content-Type": "multipart/form-data" }, // axios requires this header here
-        });
-        navigate(`/adopt`);
-        console.log(res);
-      } catch (err) {
-        console.log(err);
-        errorMess();
-      } finally {
-        setLoad(false);
-      }
-    }
-
-    const [formData, setFormData] = useState({
-        petType: "",
-        breed: "",
-        age: "",
-        name: "",
-        vaccinated: "",
-        gender: "",
-        behaviour: "",
-        reason: "",
-        phone: "",
-        address:"",
-    })
-
-    const handleChange = (event) => {
-        if(event.target.name=="images"){
-            console.log(event.target.files);
-             setImageFiles((prev) => [...prev, event.target.files[0]]);
-        }else{
-            setFormData(()=>{
-                return {...formData, [event.target.name]:event.target.value}
-            })
-        }
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        addPost(formData);
-    }
-
-  return (
+import React from "react";
+import axios from "axios";
+import { useEffect,useState } from "react";
+import { useNavigate } from "react-router";
+import { useParams } from "react-router";
+export default function  Edit(){
+    const {id,petId}=useParams();
+    const navigate=useNavigate();
+    const url = "../../public/wallpaper.jpg";
+     return (
     <div className="relative flex  justify-center items-center mt-8 min-h-screen">
       <div
         className="min-h-screen absolute inset-0"
@@ -231,4 +162,3 @@ const Form = () => {
   );
 }
 
-export default Form

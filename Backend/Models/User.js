@@ -19,7 +19,7 @@ const userSchema=new Schema({
         type:String,
         minlength:5,
     },
-    posts: [{type:Schema.Types.ObjectId,ref:Pet}]
+    posts: [{type:Schema.Types.ObjectId,ref:"Pet"}]
     
 });
 userSchema.plugin(passportLocalMongoose);

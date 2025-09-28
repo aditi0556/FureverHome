@@ -34,7 +34,7 @@ route.get("/allListings/:user_id", ensureAuthenticated, async (req, res) => {
 route.get("/getInfo/:id",ensureAuthenticated,async(req,res)=>{
     const{id}=req.params;
     try{
-        const result=await Pet.findById(id);
+        const result=await Pet.findById({_id:id});
         if(result) res.send(result);
         else res.send("There is no pet with this id");
     }
@@ -73,6 +73,7 @@ route.post("/find/:id",ensureAuthenticated,upload.fields([{name:"images"}]),asyn
           age,
           reason,
           phone,
+          address,
           behaviour,
         } = req.body;
         const images=[];
@@ -92,16 +93,17 @@ route.post("/find/:id",ensureAuthenticated,upload.fields([{name:"images"}]),asyn
           reason,
           phone,
           behaviour,
+          address,
           userId: id,
           images
         });
         await newPet
           .save()
           .then(() => {
-            res.json(200).json("Added succesfully");
+            res.status(200).json("Added succesfully");
           })
           .catch((err) => {
-            res.status(404).json("Error");
+            res.send(err);
           });
     }catch(err){
         console.log(err);

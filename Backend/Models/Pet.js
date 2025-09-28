@@ -39,6 +39,10 @@ const petSchema = new Schema({
     required: true,
     match: /^[0-9]{10}$/,
   },
+  address:{
+    type:String,
+    requires:true,
+  },
   behaviour: {
     type: String,
     maxLength: 100,
